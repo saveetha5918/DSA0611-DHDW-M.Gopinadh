@@ -1,0 +1,31 @@
+# Load necessary libraries
+library(ggplot2)
+library(ggmosaic)
+
+# Create the dataset
+data <- data.frame(
+  SCHOOL = c('A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C', 'D', 'D', 'D'),
+  GRADE_LEVEL = c('Grade 1', 'Grade 2', 'Grade 3', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 1', 'Grade 2', 'Grade 3'),
+  NUMBER_OF_STUDENTS = c(25, 30, 20, 22, 28, 18, 20, 25, 15, 28, 32, 24)
+)
+
+# Create mosaic plot
+mosaic_plot <- ggplot(data) +
+  geom_mosaic(aes(weight = NUMBER_OF_STUDENTS, x = product(GRADE_LEVEL, SCHOOL))) +
+  labs(title = "Mosaic Plot", x = "Grade Level", y = "School") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+print(mosaic_plot)
+
+# Create histogram plot
+histogram_plot <- ggplot(data, aes(x = NUMBER_OF_STUDENTS)) +
+  geom_histogram(binwidth = 5, fill = "red", color = "black") +
+  labs(title = "Histogram of Number of Students", x = "Number of Students", y = "Frequency") +
+  theme_minimal()
+print(histogram_plot)
+
+# Create scatter plot
+scatter_plot <- ggplot(data, aes(x = GRADE_LEVEL, y = NUMBER_OF_STUDENTS, color = SCHOOL)) +
+  geom_point(size = 4) +
+  labs(title = "Scatter Plot of Number of Students by Grade Level and School", x = "Grade Level", y = "Number of Students") +
+  theme_minimal()
+print(scatter_plot)
