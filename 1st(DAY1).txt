@@ -1,0 +1,46 @@
+library(ggplot2)
+library(dplyr)
+
+# Create the data frame
+data <- data.frame(
+  Month = c("Jan", "Feb", "March", "April", "May", "Jun", "July", "August", "Sep", "Oct", "Nov", "Dec"),
+  Economic_Condition = c("Good", "Good", "Good", "Good", "Fair", "Fair", "Good", "Bad", "Fair", "Good", "Bad", "Fair"),
+  Unemployment_Rate = c(10.7, 9.8, 10.2, 11.2, 15.75, 17.8, 19.4, 25.6, 18.6, 15.6, 26.7, 19.5)
+)
+
+# Aggregate the data by economic condition and month
+data_aggregated <- aggregate(Unemployment_Rate ~ Economic_Condition + Month, data, sum)
+
+# Create the stacked bar plot
+ggplot(data_aggregated, aes(x = Economic_Condition, y = Unemployment_Rate, fill = Month)) +
+  geom_bar(stat = "identity") +
+  ggtitle("Unemployment Rate by Economic Condition and Month") +
+  xlab("Economic Condition") +
+  ylab("Unemployment Rate (%)") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set3") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Aggregate data for the pie chart
+pie_data <- data %>%
+  group_by(Economic_Condition) %>%
+  summarize(Unemployment_Rate = sum(Unemployment_Rate))
+
+# Add a column for the percentage
+pie_data$percent <- pie_data$Unemployment_Rate / sum(pie_data$Unemployment_Rate) * 100
+
+# Create the pie chart with percentages inside
+ggplot(pie_data, aes(x = "", y = percent, fill = Economic_Condition)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar("y", start = 0) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), 
+            position = position_stack(vjust = 0.5), color = "white") +
+  labs(title = "Pie Chart of Unemployment Rate by Economic Condition", y = "Percentage") +
+  theme_void()
+
+# Create the grouped bar plot
+ggplot(data, aes(fill = Economic_Condition, y = Unemployment_Rate, x = Month)) + 
+  geom_bar(position = "dodge", stat = "identity") +
+  labs(title = "Grouped Bar Plot of Unemployment Rate by Month and Economic Condition",
+       x = "Month", y = "Unemployment Rate (%)")
+
