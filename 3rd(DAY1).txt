@@ -1,0 +1,51 @@
+# Load necessary libraries
+library(ggplot2)
+library(reshape2)
+library(scales)
+
+# Create the dataset
+data <- data.frame(
+  Date = as.Date(c('2024-01-01', '2024-01-02', '2024-01-03', '2024-01-04', '2024-01-05', '2024-01-06')),
+  StationA_Temperature = c(25.0, 24.5, 26.2, 23.8, 25.5, 23.0),
+  StationA_Precipitation = c(0.1, 0.0, 0.3, 0.2, 0.1, 0.4),
+  StationB_Temperature = c(23.5, 22.8, 25.0, 22.5, 24.5, 21.8),
+  StationB_Precipitation = c(0.2, 0.3, 0.1, 0.0, 0.4, 0.2)
+)
+
+# Melt the dataset for easy plotting
+data_melted <- melt(data, id = "Date")
+
+# Create time series plot
+time_series_plot <- ggplot(data_melted, aes(x = Date, y = value, color = variable)) +
+  geom_line() +
+  scale_color_manual(values = c("StationA_Temperature" = "blue", "StationA_Precipitation" = "red", "StationB_Temperature" = "green", "StationB_Precipitation" = "purple")) +
+  labs(title = "Time Series Plot of Temperature and Precipitation", x = "Date", y = "Value", color = "Variable") +
+  theme_minimal()
+
+# Display time series plot
+print(time_series_plot)
+
+# Line plot for temperatures of both stations
+line_plot <- ggplot(data) +
+  geom_line(aes(x = Date, y = StationA_Temperature, color = "Station A Temperature")) +
+  geom_line(aes(x = Date, y = StationB_Temperature, color = "Station B Temperature")) +
+  labs(title = "Line Plot of Temperatures", x = "Date", y = "Temperature (°C)", color = "Legend") +
+  scale_color_manual(values = c("Station A Temperature" = "blue", "Station B Temperature" = "green")) +
+  theme_minimal()
+
+# Display line plot
+print(line_plot)
+
+# Prepare the dataset for stacked bar plot
+stacked_data <- melt(data, id = "Date")
+stacked_data <- stacked_data[stacked_data$variable %in% c("StationA_Precipitation", "StationB_Precipitation"), ]
+
+# Create stacked bar plot
+stacked_bar_plot <- ggplot(stacked_data, aes(x = Date, y = value, fill = variable)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = c("StationA_Precipitation" = "red", "StationB_Precipitation" = "purple")) +
+  labs(title = "Stacked Bar Plot of Precipitation", x = "Date", y = "Precipitation (cm)", fill = "Station") +
+  theme_minimal()
+
+# Display stacked bar plot
+print(stacked_bar_plot)
