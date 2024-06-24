@@ -1,0 +1,51 @@
+# Create the data frame
+data <- data.frame(
+  ID = c(1, 2, 3, 4, 5),
+  Gender = c("Male", "Female", "Male", "Female", "Male"),
+  Education = c("Graduate", "Undergrad", "High School", "Graduate", "Undergrad"),
+  Occupation = c("Engineer", "Teacher", "Doctor", "Lawyer", "Artist")
+)
+
+# Bar plot showing the count of each Gender
+gender_counts <- table(data$Gender)
+barplot(gender_counts, 
+        main = "Count of Each Gender", 
+        xlab = "Gender", 
+        ylab = "Count", 
+        col = "blue")
+
+# Pie chart representing the distribution of Education levels
+education_counts <- table(data$Education)
+pie_labels <- paste(names(education_counts), education_counts, sep=": ")
+pie(education_counts, 
+    main = "Distribution of Education Levels", 
+    col = rainbow(length(education_counts)),
+    labels = pie_labels)
+
+# Stacked bar plot showing the count of each Occupation by Gender
+occupation_gender_counts <- table(data$Occupation, data$Gender)
+barplot(occupation_gender_counts, 
+        main = "Count of Each Occupation by Gender", 
+        xlab = "Occupation", 
+        ylab = "Count", 
+        col = c("blue", "red","green","pink","violet"), 
+        legend = rownames(occupation_gender_counts), 
+        beside = FALSE)
+
+# Mosaic plot to visualize the association between Education and Occupation
+education_occupation_table <- table(data$Education, data$Occupation)
+mosaicplot(education_occupation_table, 
+           main = "Association between Education and Occupation", 
+           color = TRUE, 
+           xlab = "Education", 
+           ylab = "Occupation")
+
+# Grouped bar plot showing counts of Gender across different Education levels
+education_gender_counts <- table(data$Education, data$Gender)
+barplot(education_gender_counts, 
+        main = "Counts of Gender across Different Education Levels", 
+        xlab = "Education", 
+        ylab = "Count", 
+        col = c("blue", "red","lightblue"), 
+        beside = TRUE,
+        legend = rownames(education_gender_counts))
