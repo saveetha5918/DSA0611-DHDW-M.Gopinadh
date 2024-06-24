@@ -1,0 +1,39 @@
+# Load necessary libraries
+library(ggplot2)
+library(reshape2)
+library(plotly)
+
+# Create the dataset
+data <- data.frame(
+  Date = as.Date(c('2023-01-01', '2023-01-02', '2023-01-03', '2023-01-04', '2023-01-05')),
+  StockPrice = c(100, 102, 98, 105, 108),
+  VolumeTraded = c(2.5, 3.0, 2.2, 2.8, 3.5),
+  MarketCap = c(500, 510, 490, 525, 540)
+)
+
+# View the data
+print(data)
+
+# Calculate correlations
+correlations <- cor(data[, 2:4])
+print(correlations)
+
+# 3D scatter plot using plotly
+plot_ly(data, x = ~VolumeTraded, y = ~MarketCap, z = ~StockPrice, type = 'scatter3d', mode = 'markers', 
+        marker = list(size = 5, color = ~StockPrice, colorscale = 'Viridis')) %>%
+  layout(title = '3D Scatter Plot: Volume Traded vs Market Cap vs Stock Price',
+         scene = list(xaxis = list(title = 'Volume Traded (millions)'),
+                      yaxis = list(title = 'Market Cap ($)'),
+                      zaxis = list(title = 'Stock Price ($)')))
+# 3D surface plot using plotly
+# We need to create a grid for surface plot, hence using interpolation
+
+library(akima)
+interp_data <- interp(data$VolumeTraded, data$StockPrice, data$MarketCap)
+
+plot_ly(x = interp_data$x, y = interp_data$y, z = interp_data$z, type = 'surface') %>%
+  layout(title = '3D Surface Plot: Market Cap with varying Stock Price and Volume Traded',
+         scene = list(xaxis = list(title = 'Volume Traded (millions)'),
+                      yaxis = list(title = 'Stock Price ($)'),
+                      zaxis = list(title = 'Market Cap ($)')))
+
